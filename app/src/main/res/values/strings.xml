@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Thesis Demo</string>
     <string name="image_recognise">Image Recognition</string>
+    <string name="pose_detection">Pose Detection</string>
 </resources>

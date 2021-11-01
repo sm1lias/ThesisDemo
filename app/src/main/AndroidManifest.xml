@@ -19,6 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ThesisDemo">
         <activity
+            android:name=".poserecognition.PoseRecognitionActivity"
+            android:exported="false" />
+        <activity
             android:name=".imagerecognition.ImageRecognitionActivity"
             android:exported="false" />
         <activity

@@ -3,8 +3,6 @@ package com.example.thesisdemo
 import android.app.Activity
 import android.content.ContentValues.TAG
 import android.content.Intent
-import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -13,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.example.thesisdemo.databinding.ActivityMainBinding
 import com.example.thesisdemo.imagerecognition.ImageRecognitionActivity
+import com.example.thesisdemo.poserecognition.PoseRecognitionActivity
 import java.io.File
 import java.io.IOException
 
@@ -20,7 +19,8 @@ import java.io.IOException
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    val CAMERA_REQUEST_CODE = 0
+    val CAMERA_OBJECT_RECOGNITION_CODE = 0
+    val CAMERA_POSE_DETECTION_CODE = 1
     private var mCurrentPhotoPath: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,60 +31,77 @@ class MainActivity : AppCompatActivity() {
 
 
 
-
         binding.btnImageAnalyzer.setOnClickListener {
-            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            if (cameraIntent.resolveActivity(packageManager) != null) {
-                // Create the File where the photo should go
-                var photoFile: File? = null
-                try {
-                    photoFile = createImageFile()
-                } catch (ex: IOException) {
-                    // Error occurred while creating the File
-                    Log.i(TAG, "IOException")
-                }
-                // Continue only if the File was successfully created
-                if (photoFile != null) {
-                    cameraIntent.putExtra(
-                        MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(
-                            this, BuildConfig.APPLICATION_ID + ".provider",
-                            photoFile
-                        )
-                    )
-                    startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE)
-                }
-            }
-
+            createCameraIntent()
+        }
+        binding.btnPoseDetection.setOnClickListener {
+            createCameraIntentForPoseDetection()
         }
     }
 
-    var mImageBitmap: Bitmap? = null
+    private fun createCameraIntentForPoseDetection() {
+        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (cameraIntent.resolveActivity(packageManager) != null) {
+            var photoFile: File? = null
+            try {
+                photoFile = createImageFile()
+            } catch (ex: IOException) {
+                Log.i(TAG, "IOException")
+            }
+            if (photoFile != null) {
+                cameraIntent.putExtra(
+                    MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(
+                        this, BuildConfig.APPLICATION_ID + ".provider",
+                        photoFile
+                    )
+                )
+                startActivityForResult(cameraIntent, CAMERA_POSE_DETECTION_CODE)
+            }
+        }
+    }
+
+    private fun createCameraIntent() {
+        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (cameraIntent.resolveActivity(packageManager) != null) {
+            var photoFile: File? = null
+            try {
+                photoFile = createImageFile()
+            } catch (ex: IOException) {
+                Log.i(TAG, "IOException")
+            }
+            if (photoFile != null) {
+                cameraIntent.putExtra(
+                    MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(
+                        this, BuildConfig.APPLICATION_ID + ".provider",
+                        photoFile
+                    )
+                )
+                startActivityForResult(cameraIntent, CAMERA_OBJECT_RECOGNITION_CODE)
+            }
+        }
+    }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == CAMERA_REQUEST_CODE) {
-//            val bitmap = data.extras?.get("data") as Bitmap
-//            val image = InputImage.fromBitmap(bitmap, 0)
-//
-//            val intent = Intent(this@MainActivity, ImageRecognitionActivity::class.java)
-//            intent.putExtra("bitmap", bitmap)
-//
-//            startActivity(intent)
 
+        if (resultCode == Activity.RESULT_OK && requestCode == CAMERA_OBJECT_RECOGNITION_CODE) {
             try {
-//                mImageBitmap = MediaStore.Images.Media.getBitmap(
-//                    this.contentResolver,
-//                    Uri.parse(mCurrentPhotoPath)
-//                )
                 val intent = Intent(this@MainActivity, ImageRecognitionActivity::class.java)
                 intent.putExtra("imagePath", mCurrentPhotoPath)
                 startActivity(intent)
-//                mImageView.setImageBitmap(mImageBitmap)
             } catch (e: IOException) {
                 e.printStackTrace()
             }
-
-
+        }
+        if (resultCode == Activity.RESULT_OK && requestCode == CAMERA_POSE_DETECTION_CODE) {
+            try {
+                val intent = Intent(this@MainActivity, PoseRecognitionActivity::class.java)
+                intent.putExtra("imagePath", mCurrentPhotoPath)
+                startActivity(intent)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
         }
     }
 
