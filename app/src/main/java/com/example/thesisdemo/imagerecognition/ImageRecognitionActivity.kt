@@ -8,9 +8,18 @@ import com.example.thesisdemo.databinding.ActivityImageRecognitionBinding
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.label.ImageLabeling
 import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
+import java.io.File
+import android.R
+
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.view.View
+import android.widget.ImageView
+
 
 class ImageRecognitionActivity : AppCompatActivity() {
     private lateinit var binding: ActivityImageRecognitionBinding
+    private lateinit var image:InputImage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,9 +27,17 @@ class ImageRecognitionActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        val bitmap = intent.getParcelableExtra("bitmap") as Bitmap?
-        binding.imageView.setImageBitmap(bitmap)
-        val image = InputImage.fromBitmap(bitmap, 0)
+        val imagePath = intent.getStringExtra("imagePath")
+        val imgFile= File(imagePath)
+
+        if (imgFile.exists()) {
+            var myBitmap = BitmapFactory.decodeFile(imgFile.absolutePath)
+            myBitmap=rotateBitmap(myBitmap, 90F)
+            image = InputImage.fromBitmap(myBitmap, 0)
+            binding.imageView.setImageBitmap(myBitmap)
+        }
+
+
 
         val options = ImageLabelerOptions.Builder()
             .setConfidenceThreshold(0.7f)
@@ -28,6 +45,7 @@ class ImageRecognitionActivity : AppCompatActivity() {
         val labeler = ImageLabeling.getClient(options)
         var result = ""
         val resultText: StringBuilder = StringBuilder()
+
         labeler.process(image)
             .addOnSuccessListener { labels ->
                 for (label in labels) {
@@ -45,4 +63,13 @@ class ImageRecognitionActivity : AppCompatActivity() {
 
 
         }
+
+    private fun rotateBitmap(source: Bitmap, degrees: Float): Bitmap {
+        val matrix = Matrix()
+        matrix.postRotate(degrees)
+        return Bitmap.createBitmap(
+            source, 0, 0, source.width, source.height, matrix, true
+        )
     }
+
+}
