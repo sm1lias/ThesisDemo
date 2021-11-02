@@ -9,12 +9,13 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.label.ImageLabeling
 import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 import java.io.File
-import android.R
 
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.view.View
 import android.widget.ImageView
+import com.example.thesisdemo.Utils
+import com.example.thesisdemo.Utils.rotateBitmap
 
 
 class ImageRecognitionActivity : AppCompatActivity() {
@@ -32,7 +33,7 @@ class ImageRecognitionActivity : AppCompatActivity() {
 
         if (imgFile.exists()) {
             var myBitmap = BitmapFactory.decodeFile(imgFile.absolutePath)
-            myBitmap=rotateBitmap(myBitmap, 90F)
+            myBitmap= rotateBitmap(myBitmap, 90F)
             image = InputImage.fromBitmap(myBitmap, 0)
             binding.imageView.setImageBitmap(myBitmap)
         }
@@ -64,12 +65,6 @@ class ImageRecognitionActivity : AppCompatActivity() {
 
         }
 
-    private fun rotateBitmap(source: Bitmap, degrees: Float): Bitmap {
-        val matrix = Matrix()
-        matrix.postRotate(degrees)
-        return Bitmap.createBitmap(
-            source, 0, 0, source.width, source.height, matrix, true
-        )
-    }
+
 
 }

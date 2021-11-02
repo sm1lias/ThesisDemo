@@ -4,8 +4,7 @@ import android.graphics.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import com.example.thesisdemo.R
-import com.example.thesisdemo.databinding.ActivityImageRecognitionBinding
+import com.example.thesisdemo.Utils.rotateBitmap
 import com.example.thesisdemo.databinding.ActivityPoseRecognitionBinding
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.Pose
@@ -27,10 +26,10 @@ class PoseRecognitionActivity : AppCompatActivity() {
         val imagePath = intent.getStringExtra("imagePath")
         val imgFile= File(imagePath)
 
-        val optionss: AccuratePoseDetectorOptions = AccuratePoseDetectorOptions.Builder()
+        val options: AccuratePoseDetectorOptions = AccuratePoseDetectorOptions.Builder()
             .setDetectorMode(AccuratePoseDetectorOptions.SINGLE_IMAGE_MODE)
             .build()
-        val poseDetector = PoseDetection.getClient(optionss)
+        val poseDetector = PoseDetection.getClient(options)
 
         var myBitmap:Bitmap? = null
         if (imgFile.exists()) {
@@ -50,13 +49,6 @@ class PoseRecognitionActivity : AppCompatActivity() {
             }
     }
 
-    private fun rotateBitmap(source: Bitmap, degrees: Float): Bitmap {
-        val matrix = Matrix()
-        matrix.postRotate(degrees)
-        return Bitmap.createBitmap(
-            source, 0, 0, source.width, source.height, matrix, true
-        )
-    }
 
     private fun processPose(pose: Pose, bitmap: Bitmap) {
         try {
@@ -136,7 +128,7 @@ class PoseRecognitionActivity : AppCompatActivity() {
             val rAnkleY = rightAnkleP.y
 
 
-            DisplayAll(
+            displayAll(
                 lShoulderX, lShoulderY, rShoulderX, rShoulderY,
                 lElbowX, lElbowY, rElbowX, rElbowY,
                 lWristX, lWristY, rWristX, rWristY,
@@ -149,7 +141,7 @@ class PoseRecognitionActivity : AppCompatActivity() {
         }
     }
 
-    private fun DisplayAll(
+    private fun displayAll(
         lShoulderX: Float, lShoulderY: Float, rShoulderX: Float, rShoulderY: Float,
         lElbowX: Float, lElbowY: Float, rElbowX: Float, rElbowY: Float,
         lWristX: Float, lWristY: Float, rWristX: Float, rWristY: Float,
