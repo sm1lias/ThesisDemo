@@ -3,12 +3,15 @@ package com.example.thesisdemo
 import android.app.Activity
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
+import com.example.thesisdemo.Utils.hasPermissions
 import com.example.thesisdemo.databinding.ActivityMainBinding
 import com.example.thesisdemo.facedetection.FaceDetectionActivity
 import com.example.thesisdemo.imagerecognition.ImageRecognitionActivity
@@ -18,6 +21,7 @@ import java.io.IOException
 
 
 class MainActivity : AppCompatActivity() {
+
 
     private lateinit var binding: ActivityMainBinding
     val CAMERA_OBJECT_RECOGNITION_CODE = 0
@@ -31,6 +35,10 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        requestPerms()
+
+
+
 
 
         binding.btnImageAnalyzer.setOnClickListener {
@@ -41,6 +49,28 @@ class MainActivity : AppCompatActivity() {
         }
         binding.btnFaceDetection.setOnClickListener {
             createCameraIntent(CAMERA_FACE_DETECTION_CODE)
+        }
+    }
+
+    private fun requestPerms() {
+        ActivityCompat.requestPermissions(this,
+            arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                android.Manifest.permission.CAMERA),
+            1);
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (grantResults.isNotEmpty() && grantResults[0]==PackageManager.PERMISSION_GRANTED){
+
+        }
+        else{
+            requestPerms()
         }
     }
 

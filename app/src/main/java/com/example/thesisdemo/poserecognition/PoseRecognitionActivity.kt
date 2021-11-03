@@ -40,7 +40,6 @@ class PoseRecognitionActivity : AppCompatActivity() {
         }
 
         poseDetector.process(image).addOnSuccessListener {
-            Toast.makeText(this,"Success ", Toast.LENGTH_LONG).show()
             processPose(it, myBitmap!!)
 
         }
@@ -152,14 +151,9 @@ class PoseRecognitionActivity : AppCompatActivity() {
 
     ) {
         val paint = Paint()
-        paint.color = Color.GREEN
-        val strokeWidth = 4.0f
+        paint.color = Color.BLUE
+        val strokeWidth = 6.0f
         paint.strokeWidth = strokeWidth
-        val drawBitmap = Bitmap.createBitmap(
-            bitmap.width,
-            bitmap.height,
-            bitmap.config
-        )
 
         val canvas = Canvas(bitmap)
 

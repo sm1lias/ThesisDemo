@@ -1,7 +1,6 @@
 package com.example.thesisdemo.facedetection
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.graphics.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -14,7 +13,7 @@ import java.io.File
 
 class FaceDetectionActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFaceDetectionBinding
-    private lateinit var image:InputImage
+    private lateinit var image: InputImage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +22,7 @@ class FaceDetectionActivity : AppCompatActivity() {
         setContentView(view)
 
         val imagePath = intent.getStringExtra("imagePath")
-        val imgFile= File(imagePath)
+        val imgFile = File(imagePath)
 
         val highAccuracyOpts = FaceDetectorOptions.Builder()
             .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
@@ -35,7 +34,7 @@ class FaceDetectionActivity : AppCompatActivity() {
         var myBitmap: Bitmap? = null
         if (imgFile.exists()) {
             myBitmap = BitmapFactory.decodeFile(imgFile.absolutePath)
-            myBitmap= Utils.rotateBitmap(myBitmap, 90F)
+            myBitmap = Utils.rotateBitmap(myBitmap, 90F)
             image = InputImage.fromBitmap(myBitmap, 0)
             binding.imageViewFace.setImageBitmap(myBitmap)
         }
@@ -44,18 +43,33 @@ class FaceDetectionActivity : AppCompatActivity() {
 
         detector.process(image)
             .addOnSuccessListener { faces ->
-                faceProcess(faces)
+                if (faces.isEmpty()){
+                    Toast.makeText(this, "No faces detected", Toast.LENGTH_SHORT)
+                }else {
+                    faceProcess(faces, myBitmap!!)
+                }
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Something happened, please try again!", Toast.LENGTH_LONG)
             }
 
     }
-    private fun faceProcess(faces: List<Face>){
+
+    private fun faceProcess(faces: List<Face>, bitmap: Bitmap) {
+        val paint = Paint()
+        paint.apply {
+            color = Color.RED
+            style = Paint.Style.STROKE
+            strokeWidth = 4F
+        }
+
+        val canvas = Canvas(bitmap)
         for (face in faces) {
             val bounds = face.boundingBox
             val rotY = face.headEulerAngleY // Head is rotated to the right rotY degrees
             val rotZ = face.headEulerAngleZ // Head is tilted sideways rotZ degrees
+
+            canvas.drawRect(bounds, paint)
 
             // If landmark detection was enabled (mouth, ears, eyes, cheeks, and
             // nose available):
@@ -81,5 +95,8 @@ class FaceDetectionActivity : AppCompatActivity() {
                 val id = face.trackingId
             }
         }
+        binding.imageViewFace.setImageBitmap(bitmap)
+
     }
+
 }
