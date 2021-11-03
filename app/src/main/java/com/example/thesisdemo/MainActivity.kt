@@ -11,7 +11,6 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
-import com.example.thesisdemo.Utils.hasPermissions
 import com.example.thesisdemo.databinding.ActivityMainBinding
 import com.example.thesisdemo.facedetection.FaceDetectionActivity
 import com.example.thesisdemo.imagerecognition.ImageRecognitionActivity

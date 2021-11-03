@@ -26,15 +26,19 @@
         android:theme="@style/Theme.ThesisDemo">
         <activity
             android:name=".facedetection.FaceDetectionActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".poserecognition.PoseRecognitionActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".imagerecognition.ImageRecognitionActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

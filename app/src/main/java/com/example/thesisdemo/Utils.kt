@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import androidx.core.app.ActivityCompat
+import java.io.File
 
 object Utils {
 
@@ -16,7 +17,8 @@ object Utils {
         )
     }
 
-    fun hasPermissions(context: Context, vararg permissions: String): Boolean = permissions.all {
-        ActivityCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+    fun dlFile(file: File):Boolean{
+        return file.delete()
     }
+
 }

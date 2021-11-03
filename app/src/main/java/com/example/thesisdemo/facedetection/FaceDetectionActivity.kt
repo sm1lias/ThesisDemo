@@ -52,7 +52,7 @@ class FaceDetectionActivity : AppCompatActivity() {
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Something happened, please try again!", Toast.LENGTH_LONG)
             }
-
+        Utils.dlFile(imgFile)
     }
 
     private fun faceProcess(faces: List<Face>, bitmap: Bitmap) {
@@ -60,40 +60,41 @@ class FaceDetectionActivity : AppCompatActivity() {
         paint.apply {
             color = Color.RED
             style = Paint.Style.STROKE
-            strokeWidth = 4F
+            strokeWidth = 4f
         }
 
         val canvas = Canvas(bitmap)
         for (face in faces) {
             val bounds = face.boundingBox
-            val rotY = face.headEulerAngleY // Head is rotated to the right rotY degrees
-            val rotZ = face.headEulerAngleZ // Head is tilted sideways rotZ degrees
-
             canvas.drawRect(bounds, paint)
+//            val rotY = face.headEulerAngleY // Head is rotated to the right rotY degrees
+//            val rotZ = face.headEulerAngleZ // Head is tilted sideways rotZ degrees
+
+
 
             // If landmark detection was enabled (mouth, ears, eyes, cheeks, and
             // nose available):
-            val leftEar = face.getLandmark(FaceLandmark.LEFT_EAR)
-            leftEar?.let {
-                val leftEarPos = leftEar.position
-            }
-
-            // If contour detection was enabled:
-            val leftEyeContour = face.getContour(FaceContour.LEFT_EYE)?.points
-            val upperLipBottomContour = face.getContour(FaceContour.UPPER_LIP_BOTTOM)?.points
-
-            // If classification was enabled:
-            if (face.smilingProbability != null) {
-                val smileProb = face.smilingProbability
-            }
-            if (face.rightEyeOpenProbability != null) {
-                val rightEyeOpenProb = face.rightEyeOpenProbability
-            }
-
-            // If face tracking was enabled:
-            if (face.trackingId != null) {
-                val id = face.trackingId
-            }
+//            val leftEar = face.getLandmark(FaceLandmark.LEFT_EAR)
+//            leftEar?.let {
+//                val leftEarPos = leftEar.position
+//            }
+//
+//            // If contour detection was enabled:
+//            val leftEyeContour = face.getContour(FaceContour.LEFT_EYE)?.points
+//            val upperLipBottomContour = face.getContour(FaceContour.UPPER_LIP_BOTTOM)?.points
+//
+//            // If classification was enabled:
+//            if (face.smilingProbability != null) {
+//                val smileProb = face.smilingProbability
+//            }
+//            if (face.rightEyeOpenProbability != null) {
+//                val rightEyeOpenProb = face.rightEyeOpenProbability
+//            }
+//
+//            // If face tracking was enabled:
+//            if (face.trackingId != null) {
+//                val id = face.trackingId
+//            }
         }
         binding.imageViewFace.setImageBitmap(bitmap)
 

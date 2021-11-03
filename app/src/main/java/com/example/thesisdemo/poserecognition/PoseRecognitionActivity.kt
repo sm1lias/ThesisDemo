@@ -4,6 +4,7 @@ import android.graphics.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import com.example.thesisdemo.Utils.dlFile
 import com.example.thesisdemo.Utils.rotateBitmap
 import com.example.thesisdemo.databinding.ActivityPoseRecognitionBinding
 import com.google.mlkit.vision.common.InputImage
@@ -46,6 +47,7 @@ class PoseRecognitionActivity : AppCompatActivity() {
             .addOnFailureListener {
                 Toast.makeText(this,"Failed",Toast.LENGTH_LONG).show()
             }
+        dlFile(imgFile)
     }
 
 
@@ -186,5 +188,6 @@ class PoseRecognitionActivity : AppCompatActivity() {
         canvas.drawLine(lKneeX, lKneeY, lAnkleX, lAnkleY, paint)
 
         binding.imageViewPose.setImageBitmap(bitmap)
+
     }
 }
